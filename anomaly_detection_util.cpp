@@ -41,16 +41,24 @@ float pearson(float* x, float* y, int size){
 }
 
 Line linear_reg(Point** points, int size){
+    float x[size] = {};
+    float y[size] = {};
+    for (int i = 0; i < size; i++) {
+        x[i] = points[i]->x;
+        y[i] = points[i]->y;
+    }
 
-	return Line(0,0);
+    float a = cov(x, y, size) / var(x, size);
+    float b = avg(y, size) - a * avg(x, size);
+	return *(new Line(a, b));
 }
 
 float dev(Point p,Point** points, int size){
-	return 0;
+	return dev(p, linear_reg(points, size));
 }
 
 float dev(Point p,Line l){
-	return 0;
+	return abs(l.f(p.x) - p.y);
 }
 
 
