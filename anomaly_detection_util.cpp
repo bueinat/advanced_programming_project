@@ -57,4 +57,4 @@ float dev(Point p, Point **points, int size) {
   return dev(p, linear_reg(points, size));
 }
 
-float dev(Point p, Line l) { return abs(l.f(p.x) - p.y); }
+float dev(Point p, Line l) { return fabs(l.f(p.x) - p.y); }
