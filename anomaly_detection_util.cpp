@@ -1,7 +1,7 @@
 /*
  * animaly_detection_util.cpp
  *
- * Author: Einat Buznach 314905860
+ * Author: write your ID and name here
  */
 
 #include "anomaly_detection_util.h"
