@@ -43,11 +43,14 @@ float pearson(float *x, float *y, int size);
  * @brief a class which defines a line by its slope (a) and free variable (b).
  *
  */
-class Line {
+class Line{
 public:
-  const float a, b;
-  Line(float a, float b) : a(a), b(b) {}
-  float f(float x) { return a * x + b; }
+	float a,b;
+	Line():a(0),b(0){};
+	Line(float a, float b):a(a),b(b){}
+	float f(float x){
+		return a*x+b;
+	}
 };
 
 /**
