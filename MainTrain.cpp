@@ -69,6 +69,9 @@ int main() {
 
   generateTrainCSV(a1, b1, a2, b2);
   TimeSeries ts("trainFile1.csv");
+  std::cout << "ts done" << std::endl;
+  ts.print_series();
+  std::cout << "time:" << 95 << ", B value: " << ts.get_value("B",95) << std::endl;
 //   SimpleAnomalyDetector ad;
 //   ad.learnNormal(ts);
 //   vector<correlatedFeatures> cf = ad.getNormalModel();

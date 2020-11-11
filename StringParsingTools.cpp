@@ -12,6 +12,7 @@
         splitted.push_back(scpy.substr(0, pos));
         scpy.erase(0, pos + delimiter.length());
     }
+    splitted.push_back(scpy);
     return splitted;
     }
 
@@ -24,5 +25,6 @@
         splitted.push_back(std::stod(scpy.substr(0, pos)));
         scpy.erase(0, pos + delimiter.length());
     }
+    splitted.push_back(std::stod(scpy));
     return splitted;
     }

@@ -1,3 +1,7 @@
+# my addition
+.vscode/*
+build/*
+
 # Prerequisites
 *.d
 
