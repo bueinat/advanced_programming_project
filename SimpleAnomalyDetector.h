@@ -8,7 +8,6 @@
 #include <string.h>
 #include <vector>
 
-
 struct correlatedFeatures {
   string feature1, feature2; // names of the correlated features
   float corrlation;
@@ -25,6 +24,10 @@ public:
 
   virtual void learnNormal(const TimeSeries &ts);
   virtual vector<AnomalyReport> detect(const TimeSeries &ts);
+  void add_to_cf(const TimeSeries &ts, const std::string &f1,
+                 const std::string &f2);
+  double find_max_dist(const TimeSeries &ts, const std::vector<Point> &points,
+                       Line line);
 
   vector<correlatedFeatures> getNormalModel() { return cf; }
 };
