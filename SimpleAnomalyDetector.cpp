@@ -39,11 +39,12 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
 void SimpleAnomalyDetector::add_to_cf(const TimeSeries &ts,
                                       const std::string &f1,
                                       const std::string &f2) {
+  string keyname;
   correlatedFeatures *cfs = new correlatedFeatures();
   cfs->feature1 = f1;
   cfs->feature2 = f2;
   cfs->corrlation = pearson(ts.get_column(f1), ts.get_column(f2));
-  std::cout << f1 << ", " << f2 << ": " << cfs->corrlation << ", ";
+  // std::cout << f1 << ", " << f2 << ": " << cfs->corrlation << ", " << std::endl;
 
   // f1, f2 to points array
   std::vector<Point> points;
@@ -51,11 +52,17 @@ void SimpleAnomalyDetector::add_to_cf(const TimeSeries &ts,
     points.push_back(Point(ts.get_column(f1)[i], ts.get_column(f2)[i]));
   }
   cfs->lin_reg = linear_reg(points);
+  // std::cout << cfs->feature1 + "-" + cfs->feature2 << ": " << cfs->lin_reg.a
+  //           << ", " << cfs->lin_reg.b << std::endl;
 
   cfs->threshold = find_max_dist(ts, points, cfs->lin_reg) * 1.1;
-  std::cout << cfs->threshold << std::endl;
-  cf.push_back(*cfs);
-  cfmap.insert(std::make_pair(cfs->feature1, &cf.back()));
+  // std::cout << "threshold: " << cfs->threshold << std::endl;
+  keyname = cfs->feature2 + "-" + cfs->feature1;
+  if (cfmap.count(keyname) == 0) {
+    cf.push_back(*cfs);
+    keyname = cfs->feature1 + "-" + cfs->feature2;
+    cfmap.insert(std::make_pair(keyname, &cf.back()));
+  }
 }
 
 double SimpleAnomalyDetector::find_max_dist(const TimeSeries &ts,
@@ -79,20 +86,24 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
   correlatedFeatures *itercf;
   std::vector<AnomalyReport> ar;
   std::string description;
+  // Point *p;
 
   for (int i = 0; i < ts.get_length(); i++) {
     ts_line = ts.get_line(i);
-    for (std::vector<string>::iterator it = headers.begin();
-         it != headers.end(); it++) {
-      if (cfmap.count(*it) > 0) {
-        itercf = cfmap.at(*it);
-        l = itercf->lin_reg;
-        pointdev = dev(l.fpoint(ts_line.at(itercf->feature1)), l);
-        if (pointdev > itercf->threshold) {
-          description = itercf->feature1 + "-" + itercf->feature2;
-          ar.push_back(AnomalyReport(description, i + 1));
-        }
+    for (std::vector<correlatedFeatures>::iterator itercf = cf.begin();
+         itercf != cf.end(); itercf++) {
+      // if (cfmap.count(*it) > 0) {
+      // itercf = cfmap.at(*it);
+      l = itercf->lin_reg;
+      // p = &l.fpoint(ts_line.at(itercf->feature1));
+      pointdev = dev(ts_line.at(itercf->feature1), ts_line.at(itercf->feature2), l);
+      // std::cout << pointdev <<std::endl;
+      if (pointdev > itercf->threshold) {
+        description = itercf->feature1 + "-" + itercf->feature2;
+        ar.push_back(AnomalyReport(description, i + 1));
+        // std::cout << (i + 1) << ": " << description << std::endl;
       }
+      // }
     }
   }
 

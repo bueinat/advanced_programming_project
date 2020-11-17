@@ -156,6 +156,16 @@ float dev(Point p, const std::vector<Point> &points);
  * @return float
  */
 float dev(Point p, Line l);
+
+/**
+ * @brief returns the deviation between point p and the line
+ *
+ * @param x coordinate of the point
+ * @param y coordinate of the point
+ * @param l line to calc the deviation from
+ * @return float
+ */
+float dev(float x, float y, Line l);
 // }
 
 namespace parsing_tools {

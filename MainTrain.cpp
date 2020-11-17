@@ -9,7 +9,6 @@
 #include <time.h>   /* time */
 #include <vector>
 
-
 using namespace std;
 
 // this is a simple test to put you on the right track
@@ -62,7 +61,7 @@ void checkCorrelationTrain(correlatedFeatures c, string f1, string f2, float a,
     }
   }
 }
-int main() {
+int main_for_testing() {
   srand(time(NULL));
   float a1 = 1 + rand() % 10, b1 = -50 + rand() % 100;
   float a2 = 1 + rand() % 20, b2 = -50 + rand() % 100;
@@ -71,24 +70,25 @@ int main() {
   TimeSeries ts("trainFile1.csv");
   std::cout << "ts done" << std::endl;
   ts.print_series();
-  // std::cout << "time:" << 95 << ", B value: " << ts.get_value("B",95) << std::endl;
+  // std::cout << "time:" << 95 << ", B value: " << ts.get_value("B",95) <<
+  // std::endl;
   SimpleAnomalyDetector ad;
   ad.learnNormal(ts);
-//   vector<correlatedFeatures> cf = ad.getNormalModel();
+  //   vector<correlatedFeatures> cf = ad.getNormalModel();
 
   cout << "done" << endl;
   return 0;
 }
 
-int main_full() {
+int main() {
   srand(time(NULL));
   float a1 = 1 + rand() % 10, b1 = -50 + rand() % 100;
   float a2 = 1 + rand() % 20, b2 = -50 + rand() % 100;
 
   // test the learned model: (40 points)
   // expected correlations:
-  //	A-C: y=a1*x+b1
-  //	B-D: y=a2*x+b2
+  // std::cout << "A-C: y = " << a1 << "x + " << b1 << std::endl;
+  // std::cout << "B-D: y = " << a2 << "x + " << b2 << std::endl;
 
   generateTrainCSV(a1, b1, a2, b2);
   TimeSeries ts("trainFile1.csv");
@@ -96,13 +96,15 @@ int main_full() {
   ad.learnNormal(ts);
   vector<correlatedFeatures> cf = ad.getNormalModel();
 
-  if (cf.size() != 2)
+  if (cf.size() != 2) {
     cout << "wrong size of correlated features (-40)" << endl;
-  else
+  }
+  else {
     for_each(cf.begin(), cf.end(), [&a1, &b1, &a2, &b2](correlatedFeatures c) {
       checkCorrelationTrain(c, "A", "C", a1, b1); // 20 points
       checkCorrelationTrain(c, "B", "D", a2, b2); // 20 points
     });
+  }
 
   // test the anomaly detector: (60 points)
   // one simply anomaly is injected to the data

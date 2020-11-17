@@ -104,7 +104,13 @@ float dev(Point p, const std::vector<Point> &points) {
   return dev(p, linear_reg(points));
 }
 
-float dev(Point p, Line l) { return fabs(l.f(p.x) - p.y); }
+float dev(Point p, Line l){
+  return fabs(l.f(p.x) - p.y);
+}
+
+float dev(float x, float y, Line l){
+  return dev(Point(x, y), l);
+}
 
 std::vector<std::string> parsing_tools::split(const std::string &s,
                                               const std::string &delimiter) {
