@@ -97,7 +97,7 @@ Line linear_reg(const std::vector<Point> &points) {
 
   float a = cov(x, y) / var(x);
   float b = avg(y) - a * avg(x);
-  return *(new Line(a, b));
+  return Line(a, b);
 }
 
 float dev(Point p, const std::vector<Point> &points) {

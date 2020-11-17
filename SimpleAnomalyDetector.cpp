@@ -12,7 +12,6 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
 
 void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
   auto headers = ts.get_headers();
-  // std::string time = ts.get_time_name();
   std::string highly_correlated;
   float correlation = 0;
   float max_correlation = 0;
@@ -63,6 +62,7 @@ void SimpleAnomalyDetector::add_to_cf(const TimeSeries &ts,
     keyname = cfs->feature1 + "-" + cfs->feature2;
     cfmap.insert(std::make_pair(keyname, &cf.back()));
   }
+  delete cfs;
 }
 
 double SimpleAnomalyDetector::find_max_dist(const TimeSeries &ts,

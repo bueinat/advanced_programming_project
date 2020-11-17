@@ -11,6 +11,8 @@
 
 using namespace std;
 
+// TODO: write extra tests
+
 // this is a simple test to put you on the right track
 void generateTrainCSV(float a1, float b1, float a2, float b2) {
   ofstream out("trainFile1.csv");
@@ -34,7 +36,7 @@ void generateTestCSV(float a1, float b1, float a2, float b2, int anomaly) {
   for (int i = 1; i <= 100; i++) {
     float a = i;
     float b = rand() % 40;
-    if (i != anomaly)
+    if (i % 10 != 0)
       out << a << "," << b << "," << ac.f(a) - 0.02 + (rand() % 40) / 100.0f
           << "," << bd.f(b) - 0.02 + (rand() % 40) / 100.0f << endl;
     else
@@ -61,24 +63,7 @@ void checkCorrelationTrain(correlatedFeatures c, string f1, string f2, float a,
     }
   }
 }
-int main_for_testing() {
-  srand(time(NULL));
-  float a1 = 1 + rand() % 10, b1 = -50 + rand() % 100;
-  float a2 = 1 + rand() % 20, b2 = -50 + rand() % 100;
 
-  generateTrainCSV(a1, b1, a2, b2);
-  TimeSeries ts("trainFile1.csv");
-  std::cout << "ts done" << std::endl;
-  ts.print_series();
-  // std::cout << "time:" << 95 << ", B value: " << ts.get_value("B",95) <<
-  // std::endl;
-  SimpleAnomalyDetector ad;
-  ad.learnNormal(ts);
-  //   vector<correlatedFeatures> cf = ad.getNormalModel();
-
-  cout << "done" << endl;
-  return 0;
-}
 
 int main() {
   srand(time(NULL));
@@ -113,23 +98,31 @@ int main() {
   TimeSeries ts2("testFile1.csv");
   vector<AnomalyReport> r = ad.detect(ts2);
 
-  bool anomlyDetected = false;
+  int anomlyDetected = 0;
   int falseAlarms = 0;
   for_each(r.begin(), r.end(),
            [&anomaly, &anomlyDetected, &falseAlarms](AnomalyReport ar) {
-             if (ar.description == "A-C" && ar.timeStep == anomaly)
-               anomlyDetected = true;
-             else
+             if (ar.description == "A-C" && (ar.timeStep % 10) == 0)
+               anomlyDetected++;
+             else {
                falseAlarms++;
+               cout << ar.timeStep << ": " << ar.description << endl;
+             }
            });
 
-  if (!anomlyDetected)
-    cout << "the anomaly was not detected (-30)" << endl;
+  // if (!anomlyDetected)
+    cout << (10 - anomlyDetected) << " anomalies were not detected" << endl;
 
   if (falseAlarms > 0)
     cout << "you have " << falseAlarms << " false alarms (-"
          << min(30, falseAlarms * 3) << ")" << endl;
 
   cout << "done" << endl;
+  for (int i = 0; i < 11; i++)
+  {
+    cout << i << ": " << i % 10 << ", ";
+  }
+  cout << "..." << endl;
+  
   return 0;
 }
