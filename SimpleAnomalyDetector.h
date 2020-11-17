@@ -17,6 +17,8 @@ struct correlatedFeatures {
 
 class SimpleAnomalyDetector : public TimeSeriesAnomalyDetector {
   vector<correlatedFeatures> cf;
+  map<string, correlatedFeatures*> cfmap;
+  // vector<string> m_feautres;
 
 public:
   SimpleAnomalyDetector();
@@ -29,7 +31,7 @@ public:
   double find_max_dist(const TimeSeries &ts, const std::vector<Point> &points,
                        Line line);
 
-  vector<correlatedFeatures> getNormalModel() { return cf; }
+  vector<correlatedFeatures> getNormalModel () { return cf; }
 };
 
 #endif /* SIMPLEANOMALYDETECTOR_H_ */

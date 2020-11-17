@@ -64,6 +64,8 @@ public:
     return m_series[column][index];
   }
 
+  std::map<std::string, float> get_line(int index) const;
+
   const void print_series();
 };
 

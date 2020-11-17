@@ -44,6 +44,16 @@ float cov(float *x, float *y, int size);
 float pearson(float *x, float *y, int size);
 
 /**
+ * @brief a class which defindes a point in 2D sapce.
+ *
+ */
+class Point {
+public:
+  const float x, y;
+  Point(float x, float y) : x(x), y(y) {}
+};
+
+/**
  * @brief a class which defines a line by its slope (a) and free variable (b).
  *
  */
@@ -53,16 +63,7 @@ public:
   Line() : a(0), b(0){};
   Line(float a, float b) : a(a), b(b) {}
   float f(float x) { return a * x + b; }
-};
-
-/**
- * @brief a class which defindes a point in 2D sapce.
- *
- */
-class Point {
-public:
-  const float x, y;
-  Point(float x, float y) : x(x), y(y) {}
+  Point fpoint(float x) { return Point(x, f(x)); }
 };
 
 /**
