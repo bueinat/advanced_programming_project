@@ -43,7 +43,6 @@ void SimpleAnomalyDetector::add_to_cf(const TimeSeries &ts,
   cfs->feature1 = f1;
   cfs->feature2 = f2;
   cfs->corrlation = pearson(ts.get_column(f1), ts.get_column(f2));
-  // std::cout << f1 << ", " << f2 << ": " << cfs->corrlation << ", " << std::endl;
 
   // f1, f2 to points array
   std::vector<Point> points;
@@ -51,11 +50,8 @@ void SimpleAnomalyDetector::add_to_cf(const TimeSeries &ts,
     points.push_back(Point(ts.get_column(f1)[i], ts.get_column(f2)[i]));
   }
   cfs->lin_reg = linear_reg(points);
-  // std::cout << cfs->feature1 + "-" + cfs->feature2 << ": " << cfs->lin_reg.a
-  //           << ", " << cfs->lin_reg.b << std::endl;
 
   cfs->threshold = find_max_dist(ts, points, cfs->lin_reg) * 1.1;
-  // std::cout << "threshold: " << cfs->threshold << std::endl;
   keyname = cfs->feature2 + "-" + cfs->feature1;
   if (cfmap.count(keyname) == 0) {
     cf.push_back(*cfs);
@@ -92,16 +88,11 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
     ts_line = ts.get_line(i);
     for (std::vector<correlatedFeatures>::iterator itercf = cf.begin();
          itercf != cf.end(); itercf++) {
-      // if (cfmap.count(*it) > 0) {
-      // itercf = cfmap.at(*it);
       l = itercf->lin_reg;
-      // p = &l.fpoint(ts_line.at(itercf->feature1));
       pointdev = dev(ts_line.at(itercf->feature1), ts_line.at(itercf->feature2), l);
-      // std::cout << pointdev <<std::endl;
       if (pointdev > itercf->threshold) {
         description = itercf->feature1 + "-" + itercf->feature2;
         ar.push_back(AnomalyReport(description, i + 1));
-        // std::cout << (i + 1) << ": " << description << std::endl;
       }
       // }
     }

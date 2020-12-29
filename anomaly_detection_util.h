@@ -49,7 +49,7 @@ float pearson(float *x, float *y, int size);
  */
 class Point {
 public:
-  const float x, y;
+  float x, y;
   Point(float x, float y) : x(x), y(y) {}
 };
 
